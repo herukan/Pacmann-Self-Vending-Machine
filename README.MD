@@ -1,4 +1,4 @@
-# Python Project: Library Management System (LMS)
+# Python Project: Self-Service Machine Pacmann Mart
 
 ### A. Background
 
