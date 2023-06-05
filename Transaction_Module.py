@@ -8,6 +8,15 @@ cursor = conn.cursor()
 # print("Database has been connected")
 
 class Transaction:
+    """Class representing a transaction that is currently in progress
+    
+    ATTRIBUTES:
+    trans_list: list of transaction consist of id, name, qty, and amount
+    coupon: coupon amount that added to the transaction
+    coupon_name: name of coupon
+    deduction: deduction rate for the transaction
+    final_price: final price of the transaction
+    """
     trans_list = {}
     coupon = 0
     coupon_name = ""
@@ -18,6 +27,7 @@ class Transaction:
         self.date = date
 
     def add_transaction(self, menu_id, quantity):
+        """Function to add a transaction item to the list"""
         
         try:
             sql = 'SELECT * FROM menu WHERE menu_id=?'
@@ -28,6 +38,7 @@ class Transaction:
             print("Error 404")
 
     def view_transaction(self):
+        """Function to view whole transaction of the list"""
         if self.trans_list:
             df_test = pd.DataFrame(self.trans_list.values())
             print("-"*50)
@@ -41,7 +52,7 @@ class Transaction:
             print("-"*50)
      
     def delete_transaction(self, menu_id):
-        
+        """Function to delete an item from transaction list"""
         try:
             self.trans_list.pop((menu_id))
             print("Item Deleted Successfully")
@@ -49,6 +60,7 @@ class Transaction:
             print("Item Delete Failed")
 
     def update_transaction(self, menu_id, new_id, quantity):
+        """Function to update an item from transaction list"""
         try:
             sql = 'SELECT * FROM menu WHERE menu_id=?'
             cursor.execute(sql, (new_id,))
@@ -60,6 +72,7 @@ class Transaction:
 
 
     def reset_transaction(self):
+        """Function to reset transaction"""
         try:
             self.trans_list.clear()
             print("Bucket List Clear Successfully")
@@ -67,7 +80,7 @@ class Transaction:
             print("\nTransaction Failed. Check your input.\n")
 
     def apply_coupon(self, coupon):
-        
+        """Function to apply couupon to the transaction and checking the coupon availability in the database"""
         # fetch all
         cursor.execute("SELECT * FROM coupon")
         all_results = cursor.fetchall()
@@ -93,6 +106,13 @@ class Transaction:
             print("-"*50)
         
     def confirm_transaction(self):
+        """Function to confirming a transaction, showing final bucket status and deduction rate 
+        
+        ATTRIBUTE:
+        fix_price : total fixed price deducted by coupon
+        deduction_rate : deduction rate
+        total_price = total raw original price
+        """
         fix_price = 0
         deduction_rate = 0
         total_price = 0
